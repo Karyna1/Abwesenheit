@@ -2,156 +2,237 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Abwesenheitsübersicht – K · Jun–Aug 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Abwesenheitsübersicht 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#f7f6f2;--surface:#fff;--surface-2:#f3f0ec;--border:#dcd9d5;
-  --text:#28251d;--muted:#7a7974;--faint:#bab9b4;
-  --c-medizin:#c0392b;--c-uni:#2980b9;--c-klausur:#8e44ad;--c-sonstig:#16a085;
-  --c-medizin-bg:#fdecea;--c-uni-bg:#eaf4fb;--c-klausur-bg:#f4eaf9;--c-sonstig-bg:#e8f6f3;
-  --radius:10px;--shadow:0 2px 10px rgba(0,0,0,0.07);
+  --bg:#f5f4f0;--surface:#fff;--surface-2:#f0ede8;--surface-3:#e8e5e0;
+  --border:#dbd8d2;--text:#1e1c18;--muted:#6e6c68;--faint:#b0aeaa;
+  --c-med:#c0392b;--c-med-bg:#fdecea;
+  --c-uni:#1a6faa;--c-uni-bg:#e8f3fb;
+  --c-kla:#7c3aab;--c-kla-bg:#f2eaf8;
+  --c-son:#0e8f75;--c-son-bg:#e5f5f1;
+  --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:20px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.04);
+  --trans:160ms cubic-bezier(0.16,1,0.3,1);
 }
 [data-theme="dark"]{
-  --bg:#171614;--surface:#1c1b19;--surface-2:#22211f;--border:#393836;
-  --text:#cdccca;--muted:#797876;--faint:#5a5957;
-  --c-medizin-bg:#3a1a18;--c-uni-bg:#16293a;--c-klausur-bg:#2a1a3a;--c-sonstig-bg:#143028;
+  --bg:#141312;--surface:#1c1b18;--surface-2:#222120;--surface-3:#2a2926;
+  --border:#353330;--text:#e0deda;--muted:#7a7874;--faint:#4a4846;
+  --c-med-bg:#321614;--c-uni-bg:#122030;--c-kla-bg:#221530;--c-son-bg:#0e2822;
+  --c-med:#e06055;--c-uni:#5a9fd4;--c-kla:#a870d8;--c-son:#3cbfa0;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1.25rem 4rem;}
-header{max-width:860px;margin:0 auto 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;}
-.header-left h1{font-family:'DM Serif Display',serif;font-size:1.6rem;}
-.header-left p{font-size:.85rem;color:var(--muted);margin-top:.25rem;}
-.theme-toggle{background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.4rem .85rem;font-size:.8rem;color:var(--muted);cursor:pointer;}
-.theme-toggle:hover{background:var(--surface-2);color:var(--text);}
-.legend{max-width:860px;margin:0 auto 1.75rem;display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;align-items:center;}
-.leg-item{display:flex;align-items:center;gap:.45rem;font-size:.8rem;color:var(--muted);}
-.leg-dot{width:12px;height:12px;border-radius:50%;}
-.filters{max-width:860px;margin:0 auto 1.5rem;display:flex;flex-wrap:wrap;gap:.5rem;}
-.chip{padding:.3rem .85rem;border-radius:99px;border:1.5px solid var(--border);font-size:.78rem;font-weight:500;cursor:pointer;background:var(--surface);color:var(--muted);}
-.chip.active{color:#fff;border-color:transparent;}
-.chip[data-filter="alle"].active{background:#28251d;}
-.chip[data-filter="medizin"].active{background:var(--c-medizin);}
-.chip[data-filter="uni"].active{background:var(--c-uni);}
-.chip[data-filter="klausur"].active{background:var(--c-klausur);}
-.chip[data-filter="sonstig"].active{background:var(--c-sonstig);}
-.table-wrap{max-width:860px;margin:0 auto;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--border);}
-table{width:100%;border-collapse:collapse;}
-thead tr{background:var(--surface-2);border-bottom:1px solid var(--border);}
-th{padding:.7rem 1rem;text-align:left;font-size:.73rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
-tbody tr{border-bottom:1px solid var(--border);transition:background .12s;}
+html{-webkit-text-size-adjust:100%;overflow-x:hidden;}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;-webkit-tap-highlight-color:transparent;}
+.page{max-width:900px;margin:0 auto;padding:1.75rem 1.1rem 5rem;}
+
+/* HEADER */
+.header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.5rem;}
+.header-title{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.3rem,4vw,1.75rem);line-height:1.15;}
+.header-sub{font-size:.8rem;color:var(--muted);margin-top:.3rem;}
+.toggle-btn{flex-shrink:0;background:var(--surface);border:1.5px solid var(--border);border-radius:99px;padding:.38rem .9rem;font-size:.78rem;font-weight:500;color:var(--muted);transition:all var(--trans);}
+.toggle-btn:hover{color:var(--text);border-color:var(--text);}
+
+/* SUMMARY */
+.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;margin-bottom:1.4rem;}
+.sum-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:.8rem .7rem;box-shadow:var(--shadow-sm);text-align:center;transition:transform var(--trans),box-shadow var(--trans);}
+.sum-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.sum-val{font-family:'DM Serif Display',Georgia,serif;font-size:1.6rem;line-height:1;}
+.sum-lbl{font-size:.68rem;color:var(--muted);margin-top:.2rem;line-height:1.3;}
+.val-med{color:var(--c-med);}.val-uni{color:var(--c-uni);}.val-kla{color:var(--c-kla);}.val-son{color:var(--c-son);}.val-all{color:var(--text);}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:.4rem 1rem;margin-bottom:1.4rem;}
+.leg{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--muted);}
+.leg-dot{width:9px;height:9px;border-radius:50%;}
+.absent-pill{display:inline-block;padding:.14rem .55rem;border-radius:99px;font-size:.72rem;font-weight:600;}
+.p-voll{background:#fee2e2;color:#991b1b;}
+.p-teil{background:#fef9c3;color:#854d0e;}
+[data-theme="dark"] .p-voll{background:#3b1515;color:#fca5a5;}
+[data-theme="dark"] .p-teil{background:#3b2e0a;color:#fde047;}
+
+/* FILTERS */
+.filters{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.25rem;}
+.chip{padding:.32rem .85rem;border-radius:99px;border:1.5px solid var(--border);font-size:.78rem;font-weight:500;color:var(--muted);background:var(--surface);transition:all var(--trans);}
+.chip:hover{color:var(--text);}
+.chip.active{color:#fff!important;border-color:transparent!important;}
+.chip[data-f="alle"].active{background:var(--text);}
+.chip[data-f="med"].active{background:var(--c-med);}
+.chip[data-f="uni"].active{background:var(--c-uni);}
+.chip[data-f="kla"].active{background:var(--c-kla);}
+.chip[data-f="son"].active{background:var(--c-son);}
+
+/* TABLE */
+.tbl-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow-md);}
+table{width:100%;border-collapse:collapse;table-layout:fixed;}
+colgroup col:nth-child(1){width:108px;}colgroup col:nth-child(2){width:110px;}colgroup col:nth-child(3){width:90px;}colgroup col:nth-child(4){width:auto;}colgroup col:nth-child(5){width:118px;}colgroup col:nth-child(6){width:105px;}
+thead{background:var(--surface-2);border-bottom:1.5px solid var(--border);}
+th{padding:.65rem .9rem;text-align:left;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);}
+tbody tr{border-bottom:1px solid var(--border);transition:background var(--trans);}
 tbody tr:last-child{border-bottom:none;}
 tbody tr:hover{background:var(--surface-2);}
-tbody tr.hidden{display:none;}
-td{padding:.7rem 1rem;vertical-align:middle;font-size:.88rem;}
-td.date{font-weight:600;white-space:nowrap;font-size:.82rem;min-width:110px;}
-td.time,td.duration{color:var(--muted);font-size:.82rem;white-space:nowrap;}
-.badge{display:inline-flex;align-items:center;gap:.35rem;padding:.22rem .65rem;border-radius:99px;font-size:.76rem;font-weight:500;white-space:nowrap;}
-.badge-dot{width:8px;height:8px;border-radius:50%;}
-.badge-medizin{background:var(--c-medizin-bg);color:var(--c-medizin);}
-.badge-uni{background:var(--c-uni-bg);color:var(--c-uni);}
-.badge-klausur{background:var(--c-klausur-bg);color:var(--c-klausur);}
-.badge-sonstig{background:var(--c-sonstig-bg);color:var(--c-sonstig);}
-.badge-dot-medizin{background:var(--c-medizin);}
-.badge-dot-uni{background:var(--c-uni);}
-.badge-dot-klausur{background:var(--c-klausur);}
-.badge-dot-sonstig{background:var(--c-sonstig);}
-.absent-tag{display:inline-block;padding:.18rem .55rem;border-radius:6px;font-size:.76rem;font-weight:600;}
-.absent-voll{background:#fde8e8;color:#b91c1c;}
-.absent-teil{background:#fef3c7;color:#92400e;}
-[data-theme="dark"] .absent-voll{background:#3a1515;color:#f87171;}
-[data-theme="dark"] .absent-teil{background:#3a2e0e;color:#fcd34d;}
-.termin-name{font-weight:500;}
-tr.month-sep td{padding:.45rem 1rem;background:var(--surface-2);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);border-bottom:1px solid var(--border);}
-.stats{max-width:860px;margin:1.75rem auto 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem;}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;box-shadow:var(--shadow);}
-.stat-card .val{font-family:'DM Serif Display',serif;font-size:1.8rem;line-height:1;margin-bottom:.25rem;}
-.stat-card .lbl{font-size:.75rem;color:var(--muted);}
-.val-medizin{color:var(--c-medizin);}.val-uni{color:var(--c-uni);}.val-klausur{color:var(--c-klausur);}.val-sonstig{color:var(--c-sonstig);}
-@media(max-width:640px){td.time,td.duration,th.col-time,th.col-dur{display:none;}body{padding:1.25rem .75rem 3rem;}}
+tbody tr.row-hidden{display:none;}
+td{padding:.65rem .9rem;font-size:.84rem;vertical-align:middle;}
+td.td-date{font-weight:600;font-size:.8rem;}
+td.td-time,td.td-dur{color:var(--muted);font-size:.79rem;}
+td.td-name{font-weight:500;}
+.month-row td{padding:.38rem .9rem;background:var(--surface-2);font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);border-bottom:1px solid var(--border);}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:.3rem;padding:.18rem .6rem;border-radius:99px;font-size:.71rem;font-weight:600;white-space:nowrap;}
+.b-med{background:var(--c-med-bg);color:var(--c-med);}
+.b-uni{background:var(--c-uni-bg);color:var(--c-uni);}
+.b-kla{background:var(--c-kla-bg);color:var(--c-kla);}
+.b-son{background:var(--c-son-bg);color:var(--c-son);}
+.bdot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+/* MOBILE CARDS */
+.cards{display:none;flex-direction:column;gap:.55rem;}
+.month-hdr{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:.5rem .1rem .2rem;}
+.card{background:var(--surface);border:1.5px solid var(--border);border-left-width:3.5px;border-radius:var(--r-lg);padding:.9rem 1rem;box-shadow:var(--shadow-sm);transition:transform var(--trans);}
+.card:active{transform:scale(0.985);}
+.card.card-hidden{display:none;}
+.card[data-cat="med"]{border-left-color:var(--c-med);}
+.card[data-cat="uni"]{border-left-color:var(--c-uni);}
+.card[data-cat="kla"]{border-left-color:var(--c-kla);}
+.card[data-cat="son"]{border-left-color:var(--c-son);}
+.card-row1{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.45rem;}
+.card-date{font-weight:700;font-size:.82rem;}
+.card-time{font-size:.74rem;color:var(--muted);margin-top:.12rem;}
+.card-name{font-weight:600;font-size:.92rem;margin-bottom:.45rem;}
+.card-row2{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;}
+
+@media(max-width:660px){
+  .tbl-wrap{display:none;}
+  .cards{display:flex;}
+  .summary{grid-template-columns:repeat(3,1fr);}
+  .sum-card:nth-child(4),.sum-card:nth-child(5){display:none;}
+  .page{padding:1.25rem .85rem 4rem;}
+}
+@media(max-width:400px){
+  .summary{grid-template-columns:repeat(2,1fr);}
+  .sum-card:nth-child(3){display:none;}
+}
 </style>
 </head>
-<body>
-<header>
-  <div class="header-left">
-    <h1>Abwesenheitsübersicht</h1>
-    <p>彡K &nbsp;·&nbsp; Juni – August 2026 &nbsp;·&nbsp; 17 Termine</p>
+<body data-theme="light">
+<div class="page">
+  <div class="header">
+    <div>
+      <div class="header-title">Abwesenheitsübersicht</div>
+      <div class="header-sub">彡K &nbsp;·&nbsp; Juni – August 2026 &nbsp;·&nbsp; 17 Termine</div>
+    </div>
+    <button class="toggle-btn" id="themeBtn">🌙 Dark</button>
   </div>
-  <button class="theme-toggle" data-theme-toggle>🌙 Dark</button>
-</header>
-<div class="legend">
-  <span class="leg-item"><span class="leg-dot" style="background:var(--c-medizin)"></span>Medizinisch</span>
-  <span class="leg-item"><span class="leg-dot" style="background:var(--c-uni)"></span>Universität</span>
-  <span class="leg-item"><span class="leg-dot" style="background:var(--c-klausur)"></span>Klausur</span>
-  <span class="leg-item"><span class="leg-dot" style="background:var(--c-sonstig)"></span>Sonstiges</span>
-  <span class="leg-item" style="margin-left:.5rem"><span class="absent-tag absent-voll">Vollständig</span></span>
-  <span class="leg-item"><span class="absent-tag absent-teil">Teilweise</span></span>
+
+  <div class="summary">
+    <div class="sum-card"><div class="sum-val val-med">6</div><div class="sum-lbl">🩺 Medizinisch</div></div>
+    <div class="sum-card"><div class="sum-val val-uni">4</div><div class="sum-lbl">🎓 Universität</div></div>
+    <div class="sum-card"><div class="sum-val val-kla">4</div><div class="sum-lbl">📝 Klausuren</div></div>
+    <div class="sum-card"><div class="sum-val val-son">3</div><div class="sum-lbl">📌 Sonstiges</div></div>
+    <div class="sum-card"><div class="sum-val val-all">17</div><div class="sum-lbl">📅 Gesamt</div></div>
+  </div>
+
+  <div class="legend">
+    <span class="leg"><span class="leg-dot" style="background:var(--c-med)"></span>Medizinisch</span>
+    <span class="leg"><span class="leg-dot" style="background:var(--c-uni)"></span>Universität</span>
+    <span class="leg"><span class="leg-dot" style="background:var(--c-kla)"></span>Klausur</span>
+    <span class="leg"><span class="leg-dot" style="background:var(--c-son)"></span>Sonstiges</span>
+    <span class="leg" style="margin-left:.25rem"><span class="absent-pill p-voll">Vollständig</span></span>
+    <span class="leg"><span class="absent-pill p-teil">Teilweise</span></span>
+  </div>
+
+  <div class="filters">
+    <button class="chip active" data-f="alle">Alle</button>
+    <button class="chip" data-f="med">🩺 Medizinisch</button>
+    <button class="chip" data-f="uni">🎓 Universität</button>
+    <button class="chip" data-f="kla">📝 Klausur</button>
+    <button class="chip" data-f="son">📌 Sonstiges</button>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <colgroup><col/><col/><col/><col/><col/><col/></colgroup>
+      <thead><tr><th>Datum</th><th>Uhrzeit</th><th>Dauer</th><th>Termin</th><th>Kategorie</th><th>Abwesenheit</th></tr></thead>
+      <tbody id="tBody">
+        <tr class="month-row"><td colspan="6">Juni 2026</td></tr>
+        <tr data-cat="med"><td class="td-date">03.06.2026</td><td class="td-time">11:00 Uhr</td><td class="td-dur">ca. 2 Std.</td><td class="td-name">CT Coburg</td><td><span class="badge b-med"><span class="bdot"></span>Medizinisch</span></td><td><span class="absent-pill p-teil">Teilweise</span></td></tr>
+        <tr data-cat="son"><td class="td-date">09.06.2026</td><td class="td-time">13:00 Uhr</td><td class="td-dur">ca. 3 Std.</td><td class="td-name">Professorbesprechung</td><td><span class="badge b-son"><span class="bdot"></span>Sonstiges</span></td><td><span class="absent-pill p-teil">Teilweise</span></td></tr>
+        <tr data-cat="med"><td class="td-date">10.06.2026</td><td class="td-time">09:00 Uhr</td><td class="td-dur">ca. 1–3 Std.</td><td class="td-name">Hausarzttermin</td><td><span class="badge b-med"><span class="bdot"></span>Medizinisch</span></td><td><span class="absent-pill p-teil">Teilweise</span></td></tr>
+        <tr data-cat="uni"><td class="td-date">15.06.2026</td><td class="td-time">Ganztägig</td><td class="td-dur">1 Tag</td><td class="td-name">Universität – GIV-Projekt</td><td><span class="badge b-uni"><span class="bdot"></span>Universität</span></td><td><span class="absent-pill p-voll">Vollständig</span></td></tr>
+        <tr data-cat="son"><td class="td-date">17.06.2026</td><td class="td-time">09:00–18:00</td><td class="td-dur">Ganztägig</td><td class="td-name">Landratsamt + Universität</td><td><span class="badge b-son"><span class="bdot"></span>Sonstiges</span></td><td><span class="absent-pill p-voll">Vollständig</span></td></tr>
+        <tr data-cat="med"><td class="td-date">23.06.2026</td><td class="td-time">12:00 Uhr</td><td class="td-dur">ca. 4 Std.</td><td class="td-name">Mammographie Bamberg</td><td><span class="badge b-med"><span class="bdot"></span>Medizinisch</span></td><td><span class="absent-pill p-teil">Teilweise</span></td></tr>
+        <tr data-cat="uni"><td class="td-date">25.–27.06.</td><td class="td-time">Ganztägig</td><td class="td-dur">3 Tage</td><td class="td-name">Universität – GIV-Projekt</td><td><span class="badge b-uni"><span class="bdot"></span>Universität</span></td><td><span class="absent-pill p-voll">Vollständig</span></td></tr>
+        <tr data-cat="med"><td class="td-date">30.06.2026</td><td class="td-time">08:30 Uhr</td><td class="td-dur">ca. 3 Std.</td><td class="td-name">Arzttermin Bamberg</td><td><span class="badge b-med"><span class="bdot"></span>Medizinisch</span></td><td><span class="absent-pill p-teil">Teilweise</span></td></tr>
+        <tr class="month-row"><td colspan="6">Juli 2026</td></tr>
+        <tr data-cat="uni"><td class="td-date">06.07.2026</td><td class="td-time">Ganztägig</td><td class="td-dur">1 Tag</td><td class="td-name">Universität – GIV-Projekt</td><td><span class="badge b-uni"><span class="bdot"></span>Universität</span></td><td><span class="absent-pill p-voll">Vollständig</span></td></tr>
+        <tr data-cat="son"><td class="td-date">06.–13.07.</td><td class="td-time">Ganztägig</td><td class="td-dur">8 Tage</td><td class="td-name">Klinikum-Seminar</td><td><span class="badge b-son"><span class="bdot"></span>Sonstiges</span></td><td><span class="absent-pill p-voll">Vollständig</span></td></tr>
+        <tr data-cat="kla"><td class="td-date">15.07.2026</td><td class="td-time">folgt</td><td class="td-dur">—</td><td class="td-name">Klausur FJAVA</td><td><span class="badge b-kla"><span class="bdot"></span>Klausur</span></td><td><span class="absent-pill p-voll">Vollständig</span></td></tr>
+        <tr data-cat="kla"><td class="td-date">16.07.2026</td><td class="td-time">folgt</td><td class="td-dur">—</td><td class="td-name">Klausur DistSys</td><td><span class="badge b-kla"><span class="bdot"></span>Klausur</span></td><td><span class="absent-pill p-voll">Vollständig</span></td></tr>
+        <tr data-cat="med"><td class="td-date">23.07.2026</td><td class="td-time">10:50 Uhr</td><td class="td-dur">ca. 3 Std.</td><td class="td-name">Arzttermin Bad Staffelstein</td><td><span class="badge b-med"><span class="bdot"></span>Medizinisch</span></td><td><span class="absent-pill p-teil">Teilweise</span></td></tr>
+        <tr data-cat="uni"><td class="td-date">29.–31.07.</td><td class="td-time">Ganztägig</td><td class="td-dur">3 Tage</td><td class="td-name">Universität – GIV-Projekt</td><td><span class="badge b-uni"><span class="bdot"></span>Universität</span></td><td><span class="absent-pill p-voll">Vollständig</span></td></tr>
+        <tr class="month-row"><td colspan="6">August 2026</td></tr>
+        <tr data-cat="kla"><td class="td-date">17.08.2026</td><td class="td-time">folgt</td><td class="td-dur">—</td><td class="td-name">Klausur FSE</td><td><span class="badge b-kla"><span class="bdot"></span>Klausur</span></td><td><span class="absent-pill p-voll">Vollständig</span></td></tr>
+        <tr data-cat="kla"><td class="td-date">20.08.2026</td><td class="td-time">folgt</td><td class="td-dur">—</td><td class="td-name">Klausur JAVA</td><td><span class="badge b-kla"><span class="bdot"></span>Klausur</span></td><td><span class="absent-pill p-voll">Vollständig</span></td></tr>
+        <tr data-cat="son"><td class="td-date">29.08.2026</td><td class="td-time">Ganztägig</td><td class="td-dur">1 Tag</td><td class="td-name">Reservierter Termin</td><td><span class="badge b-son"><span class="bdot"></span>Sonstiges</span></td><td><span class="absent-pill p-voll">Vollständig</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cards" id="cards">
+    <div class="month-hdr">Juni 2026</div>
+    <div class="card" data-cat="med"><div class="card-row1"><div><div class="card-date">03.06.2026</div><div class="card-time">11:00 Uhr &middot; ca. 2 Std.</div></div><span class="absent-pill p-teil">Teilweise</span></div><div class="card-name">CT Coburg</div><div class="card-row2"><span class="badge b-med"><span class="bdot"></span>Medizinisch</span></div></div>
+    <div class="card" data-cat="son"><div class="card-row1"><div><div class="card-date">09.06.2026</div><div class="card-time">13:00 Uhr &middot; ca. 3 Std.</div></div><span class="absent-pill p-teil">Teilweise</span></div><div class="card-name">Professorbesprechung</div><div class="card-row2"><span class="badge b-son"><span class="bdot"></span>Sonstiges</span></div></div>
+    <div class="card" data-cat="med"><div class="card-row1"><div><div class="card-date">10.06.2026</div><div class="card-time">09:00 Uhr &middot; ca. 1–3 Std.</div></div><span class="absent-pill p-teil">Teilweise</span></div><div class="card-name">Hausarzttermin</div><div class="card-row2"><span class="badge b-med"><span class="bdot"></span>Medizinisch</span></div></div>
+    <div class="card" data-cat="uni"><div class="card-row1"><div><div class="card-date">15.06.2026</div><div class="card-time">Ganztägig &middot; 1 Tag</div></div><span class="absent-pill p-voll">Vollständig</span></div><div class="card-name">Universität – GIV-Projekt</div><div class="card-row2"><span class="badge b-uni"><span class="bdot"></span>Universität</span></div></div>
+    <div class="card" data-cat="son"><div class="card-row1"><div><div class="card-date">17.06.2026</div><div class="card-time">09:00–18:00 &middot; Ganztägig</div></div><span class="absent-pill p-voll">Vollständig</span></div><div class="card-name">Landratsamt + Universität</div><div class="card-row2"><span class="badge b-son"><span class="bdot"></span>Sonstiges</span></div></div>
+    <div class="card" data-cat="med"><div class="card-row1"><div><div class="card-date">23.06.2026</div><div class="card-time">12:00 Uhr &middot; ca. 4 Std.</div></div><span class="absent-pill p-teil">Teilweise</span></div><div class="card-name">Mammographie Bamberg</div><div class="card-row2"><span class="badge b-med"><span class="bdot"></span>Medizinisch</span></div></div>
+    <div class="card" data-cat="uni"><div class="card-row1"><div><div class="card-date">25.–27.06.2026</div><div class="card-time">Ganztägig &middot; 3 Tage</div></div><span class="absent-pill p-voll">Vollständig</span></div><div class="card-name">Universität – GIV-Projekt</div><div class="card-row2"><span class="badge b-uni"><span class="bdot"></span>Universität</span></div></div>
+    <div class="card" data-cat="med"><div class="card-row1"><div><div class="card-date">30.06.2026</div><div class="card-time">08:30 Uhr &middot; ca. 3 Std.</div></div><span class="absent-pill p-teil">Teilweise</span></div><div class="card-name">Arzttermin Bamberg</div><div class="card-row2"><span class="badge b-med"><span class="bdot"></span>Medizinisch</span></div></div>
+    <div class="month-hdr">Juli 2026</div>
+    <div class="card" data-cat="uni"><div class="card-row1"><div><div class="card-date">06.07.2026</div><div class="card-time">Ganztägig &middot; 1 Tag</div></div><span class="absent-pill p-voll">Vollständig</span></div><div class="card-name">Universität – GIV-Projekt</div><div class="card-row2"><span class="badge b-uni"><span class="bdot"></span>Universität</span></div></div>
+    <div class="card" data-cat="son"><div class="card-row1"><div><div class="card-date">06.–13.07.2026</div><div class="card-time">Ganztägig &middot; 8 Tage</div></div><span class="absent-pill p-voll">Vollständig</span></div><div class="card-name">Klinikum-Seminar</div><div class="card-row2"><span class="badge b-son"><span class="bdot"></span>Sonstiges</span></div></div>
+    <div class="card" data-cat="kla"><div class="card-row1"><div><div class="card-date">15.07.2026</div><div class="card-time">Uhrzeit folgt</div></div><span class="absent-pill p-voll">Vollständig</span></div><div class="card-name">Klausur FJAVA</div><div class="card-row2"><span class="badge b-kla"><span class="bdot"></span>Klausur</span></div></div>
+    <div class="card" data-cat="kla"><div class="card-row1"><div><div class="card-date">16.07.2026</div><div class="card-time">Uhrzeit folgt</div></div><span class="absent-pill p-voll">Vollständig</span></div><div class="card-name">Klausur DistSys</div><div class="card-row2"><span class="badge b-kla"><span class="bdot"></span>Klausur</span></div></div>
+    <div class="card" data-cat="med"><div class="card-row1"><div><div class="card-date">23.07.2026</div><div class="card-time">10:50 Uhr &middot; ca. 3 Std.</div></div><span class="absent-pill p-teil">Teilweise</span></div><div class="card-name">Arzttermin Bad Staffelstein</div><div class="card-row2"><span class="badge b-med"><span class="bdot"></span>Medizinisch</span></div></div>
+    <div class="card" data-cat="uni"><div class="card-row1"><div><div class="card-date">29.–31.07.2026</div><div class="card-time">Ganztägig &middot; 3 Tage</div></div><span class="absent-pill p-voll">Vollständig</span></div><div class="card-name">Universität – GIV-Projekt</div><div class="card-row2"><span class="badge b-uni"><span class="bdot"></span>Universität</span></div></div>
+    <div class="month-hdr">August 2026</div>
+    <div class="card" data-cat="kla"><div class="card-row1"><div><div class="card-date">17.08.2026</div><div class="card-time">Uhrzeit folgt</div></div><span class="absent-pill p-voll">Vollständig</span></div><div class="card-name">Klausur FSE</div><div class="card-row2"><span class="badge b-kla"><span class="bdot"></span>Klausur</span></div></div>
+    <div class="card" data-cat="kla"><div class="card-row1"><div><div class="card-date">20.08.2026</div><div class="card-time">Uhrzeit folgt</div></div><span class="absent-pill p-voll">Vollständig</span></div><div class="card-name">Klausur JAVA</div><div class="card-row2"><span class="badge b-kla"><span class="bdot"></span>Klausur</span></div></div>
+    <div class="card" data-cat="son"><div class="card-row1"><div><div class="card-date">29.08.2026</div><div class="card-time">Ganztägig &middot; 1 Tag</div></div><span class="absent-pill p-voll">Vollständig</span></div><div class="card-name">Reservierter Termin</div><div class="card-row2"><span class="badge b-son"><span class="bdot"></span>Sonstiges</span></div></div>
+  </div>
 </div>
-<div class="filters">
-  <button class="chip active" data-filter="alle">Alle</button>
-  <button class="chip" data-filter="medizin">🩺 Medizinisch</button>
-  <button class="chip" data-filter="uni">🎓 Universität</button>
-  <button class="chip" data-filter="klausur">📝 Klausur</button>
-  <button class="chip" data-filter="sonstig">📌 Sonstiges</button>
-</div>
-<div class="table-wrap">
-<table>
-  <thead><tr>
-    <th>Datum</th><th class="col-time">Uhrzeit</th><th class="col-dur">Dauer</th>
-    <th>Termin</th><th>Kategorie</th><th>Abwesenheit</th>
-  </tr></thead>
-  <tbody id="tbody">
-    <tr class="month-sep"><td colspan="6">Juni 2026</td></tr>
-    <tr data-cat="medizin"><td class="date">03.06.2026</td><td class="time">11:00 Uhr</td><td class="duration">ca. 2 Std.</td><td><span class="termin-name">CT Coburg</span></td><td><span class="badge badge-medizin"><span class="badge-dot badge-dot-medizin"></span>Medizinisch</span></td><td><span class="absent-tag absent-teil">Teilweise</span></td></tr>
-    <tr data-cat="sonstig"><td class="date">09.06.2026</td><td class="time">13:00 Uhr</td><td class="duration">ca. 3 Std.</td><td><span class="termin-name">Professorbesprechung</span></td><td><span class="badge badge-sonstig"><span class="badge-dot badge-dot-sonstig"></span>Sonstiges</span></td><td><span class="absent-tag absent-teil">Teilweise</span></td></tr>
-    <tr data-cat="medizin"><td class="date">10.06.2026</td><td class="time">09:00 Uhr</td><td class="duration">ca. 1–3 Std.</td><td><span class="termin-name">Hausarzttermin</span></td><td><span class="badge badge-medizin"><span class="badge-dot badge-dot-medizin"></span>Medizinisch</span></td><td><span class="absent-tag absent-teil">Teilweise</span></td></tr>
-    <tr data-cat="uni"><td class="date">15.06.2026</td><td class="time">Ganztägig</td><td class="duration">1 Tag</td><td><span class="termin-name">Universität – GIV-Projekt</span></td><td><span class="badge badge-uni"><span class="badge-dot badge-dot-uni"></span>Universität</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
-    <tr data-cat="sonstig"><td class="date">17.06.2026</td><td class="time">09:00–18:00 Uhr</td><td class="duration">Ganztägig</td><td><span class="termin-name">Landratsamt + Universität</span></td><td><span class="badge badge-sonstig"><span class="badge-dot badge-dot-sonstig"></span>Sonstiges</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
-    <tr data-cat="medizin"><td class="date">23.06.2026</td><td class="time">12:00 Uhr</td><td class="duration">ca. 4 Std.</td><td><span class="termin-name">Mammographie Bamberg</span></td><td><span class="badge badge-medizin"><span class="badge-dot badge-dot-medizin"></span>Medizinisch</span></td><td><span class="absent-tag absent-teil">Teilweise</span></td></tr>
-    <tr data-cat="uni"><td class="date">25.–27.06.2026</td><td class="time">Ganztägig</td><td class="duration">3 Tage</td><td><span class="termin-name">Universität – GIV-Projekt</span></td><td><span class="badge badge-uni"><span class="badge-dot badge-dot-uni"></span>Universität</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
-    <tr data-cat="medizin"><td class="date">30.06.2026</td><td class="time">08:30 Uhr</td><td class="duration">ca. 3 Std.</td><td><span class="termin-name">Arzttermin Bamberg</span></td><td><span class="badge badge-medizin"><span class="badge-dot badge-dot-medizin"></span>Medizinisch</span></td><td><span class="absent-tag absent-teil">Teilweise</span></td></tr>
-    <tr class="month-sep"><td colspan="6">Juli 2026</td></tr>
-    <tr data-cat="uni"><td class="date">06.07.2026</td><td class="time">Ganztägig</td><td class="duration">1 Tag</td><td><span class="termin-name">Universität – GIV-Projekt</span></td><td><span class="badge badge-uni"><span class="badge-dot badge-dot-uni"></span>Universität</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
-    <tr data-cat="sonstig"><td class="date">06.–13.07.2026</td><td class="time">Ganztägig</td><td class="duration">8 Tage</td><td><span class="termin-name">Klinikum-Seminar</span></td><td><span class="badge badge-sonstig"><span class="badge-dot badge-dot-sonstig"></span>Sonstiges</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
-    <tr data-cat="klausur"><td class="date">15.07.2026</td><td class="time">Uhrzeit folgt</td><td class="duration">—</td><td><span class="termin-name">Klausur FJAVA</span></td><td><span class="badge badge-klausur"><span class="badge-dot badge-dot-klausur"></span>Klausur</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
-    <tr data-cat="klausur"><td class="date">16.07.2026</td><td class="time">Uhrzeit folgt</td><td class="duration">—</td><td><span class="termin-name">Klausur DistSys</span></td><td><span class="badge badge-klausur"><span class="badge-dot badge-dot-klausur"></span>Klausur</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
-    <tr data-cat="medizin"><td class="date">23.07.2026</td><td class="time">10:50 Uhr</td><td class="duration">ca. 3 Std.</td><td><span class="termin-name">Arzttermin Bad Staffelstein</span></td><td><span class="badge badge-medizin"><span class="badge-dot badge-dot-medizin"></span>Medizinisch</span></td><td><span class="absent-tag absent-teil">Teilweise</span></td></tr>
-    <tr data-cat="uni"><td class="date">29.–31.07.2026</td><td class="time">Ganztägig</td><td class="duration">3 Tage</td><td><span class="termin-name">Universität – GIV-Projekt</span></td><td><span class="badge badge-uni"><span class="badge-dot badge-dot-uni"></span>Universität</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
-    <tr class="month-sep"><td colspan="6">August 2026</td></tr>
-    <tr data-cat="klausur"><td class="date">17.08.2026</td><td class="time">Uhrzeit folgt</td><td class="duration">—</td><td><span class="termin-name">Klausur FSE</span></td><td><span class="badge badge-klausur"><span class="badge-dot badge-dot-klausur"></span>Klausur</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
-    <tr data-cat="klausur"><td class="date">20.08.2026</td><td class="time">Uhrzeit folgt</td><td class="duration">—</td><td><span class="termin-name">Klausur JAVA</span></td><td><span class="badge badge-klausur"><span class="badge-dot badge-dot-klausur"></span>Klausur</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
-    <tr data-cat="sonstig"><td class="date">29.08.2026</td><td class="time">Ganztägig</td><td class="duration">1 Tag</td><td><span class="termin-name">Reservierter Termin</span></td><td><span class="badge badge-sonstig"><span class="badge-dot badge-dot-sonstig"></span>Sonstiges</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
-  </tbody>
-</table>
-</div>
-<div class="stats">
-  <div class="stat-card"><div class="val val-medizin">6</div><div class="lbl">🩺 Medizinische Termine</div></div>
-  <div class="stat-card"><div class="val val-uni">4</div><div class="lbl">🎓 Uni-Blöcke</div></div>
-  <div class="stat-card"><div class="val val-klausur">4</div><div class="lbl">📝 Klausuren</div></div>
-  <div class="stat-card"><div class="val val-sonstig">3</div><div class="lbl">📌 Sonstiges</div></div>
-  <div class="stat-card"><div class="val" style="color:var(--text)">17</div><div class="lbl">📅 Gesamt</div></div>
-</div>
+
 <script>
-(function(){
-  const btn=document.querySelector('[data-theme-toggle]'),html=document.documentElement;
-  let dark=matchMedia('(prefers-color-scheme:dark)').matches;
-  html.setAttribute('data-theme',dark?'dark':'light');
-  btn.textContent=dark?'☀️ Hell':'🌙 Dark';
-  btn.addEventListener('click',()=>{dark=!dark;html.setAttribute('data-theme',dark?'dark':'light');btn.textContent=dark?'☀️ Hell':'🌙 Dark';});
-})();
-document.querySelectorAll('.chip').forEach(chip=>{
-  chip.addEventListener('click',()=>{
-    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-    chip.classList.add('active');
-    const f=chip.dataset.filter;
-    document.querySelectorAll('#tbody tr[data-cat]').forEach(r=>r.classList.toggle('hidden',f!=='alle'&&r.dataset.cat!==f));
-    document.querySelectorAll('#tbody tr.month-sep').forEach(sep=>{
-      let next=sep.nextElementSibling,vis=false;
-      while(next&&!next.classList.contains('month-sep')){if(!next.classList.contains('hidden')){vis=true;break;}next=next.nextElementSibling;}
-      sep.classList.toggle('hidden',!vis);
+const btn=document.getElementById('themeBtn');
+const html=document.documentElement;
+let dark=matchMedia('(prefers-color-scheme:dark)').matches;
+function applyTheme(d){html.setAttribute('data-theme',d?'dark':'light');btn.textContent=d?'☀️ Hell':'🌙 Dark';}
+applyTheme(dark);
+btn.addEventListener('click',()=>{dark=!dark;applyTheme(dark);});
+
+document.querySelectorAll('.chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    const f=c.dataset.f;
+    document.querySelectorAll('#tBody tr[data-cat]').forEach(r=>r.classList.toggle('row-hidden',f!=='alle'&&r.dataset.cat!==f));
+    document.querySelectorAll('#tBody tr.month-row').forEach(sep=>{
+      let n=sep.nextElementSibling,vis=false;
+      while(n&&!n.classList.contains('month-row')){if(!n.classList.contains('row-hidden')){vis=true;break;}n=n.nextElementSibling;}
+      sep.classList.toggle('row-hidden',!vis);
+    });
+    document.querySelectorAll('#cards .card').forEach(card=>card.classList.toggle('card-hidden',f!=='alle'&&card.dataset.cat!==f));
+    document.querySelectorAll('#cards .month-hdr').forEach(hdr=>{
+      let n=hdr.nextElementSibling,vis=false;
+      while(n&&!n.classList.contains('month-hdr')){if(!n.classList.contains('card-hidden')){vis=true;break;}n=n.nextElementSibling;}
+      hdr.style.display=vis?'':'none';
     });
   });
 });
