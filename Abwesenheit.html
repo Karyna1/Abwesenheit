@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abwesenheitsübersicht – K · Jun–Aug 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f7f6f2;--surface:#fff;--surface-2:#f3f0ec;--border:#dcd9d5;
+  --text:#28251d;--muted:#7a7974;--faint:#bab9b4;
+  --c-medizin:#c0392b;--c-uni:#2980b9;--c-klausur:#8e44ad;--c-sonstig:#16a085;
+  --c-medizin-bg:#fdecea;--c-uni-bg:#eaf4fb;--c-klausur-bg:#f4eaf9;--c-sonstig-bg:#e8f6f3;
+  --radius:10px;--shadow:0 2px 10px rgba(0,0,0,0.07);
+}
+[data-theme="dark"]{
+  --bg:#171614;--surface:#1c1b19;--surface-2:#22211f;--border:#393836;
+  --text:#cdccca;--muted:#797876;--faint:#5a5957;
+  --c-medizin-bg:#3a1a18;--c-uni-bg:#16293a;--c-klausur-bg:#2a1a3a;--c-sonstig-bg:#143028;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1.25rem 4rem;}
+header{max-width:860px;margin:0 auto 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;}
+.header-left h1{font-family:'DM Serif Display',serif;font-size:1.6rem;}
+.header-left p{font-size:.85rem;color:var(--muted);margin-top:.25rem;}
+.theme-toggle{background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.4rem .85rem;font-size:.8rem;color:var(--muted);cursor:pointer;}
+.theme-toggle:hover{background:var(--surface-2);color:var(--text);}
+.legend{max-width:860px;margin:0 auto 1.75rem;display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;align-items:center;}
+.leg-item{display:flex;align-items:center;gap:.45rem;font-size:.8rem;color:var(--muted);}
+.leg-dot{width:12px;height:12px;border-radius:50%;}
+.filters{max-width:860px;margin:0 auto 1.5rem;display:flex;flex-wrap:wrap;gap:.5rem;}
+.chip{padding:.3rem .85rem;border-radius:99px;border:1.5px solid var(--border);font-size:.78rem;font-weight:500;cursor:pointer;background:var(--surface);color:var(--muted);}
+.chip.active{color:#fff;border-color:transparent;}
+.chip[data-filter="alle"].active{background:#28251d;}
+.chip[data-filter="medizin"].active{background:var(--c-medizin);}
+.chip[data-filter="uni"].active{background:var(--c-uni);}
+.chip[data-filter="klausur"].active{background:var(--c-klausur);}
+.chip[data-filter="sonstig"].active{background:var(--c-sonstig);}
+.table-wrap{max-width:860px;margin:0 auto;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;}
+thead tr{background:var(--surface-2);border-bottom:1px solid var(--border);}
+th{padding:.7rem 1rem;text-align:left;font-size:.73rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
+tbody tr{border-bottom:1px solid var(--border);transition:background .12s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--surface-2);}
+tbody tr.hidden{display:none;}
+td{padding:.7rem 1rem;vertical-align:middle;font-size:.88rem;}
+td.date{font-weight:600;white-space:nowrap;font-size:.82rem;min-width:110px;}
+td.time,td.duration{color:var(--muted);font-size:.82rem;white-space:nowrap;}
+.badge{display:inline-flex;align-items:center;gap:.35rem;padding:.22rem .65rem;border-radius:99px;font-size:.76rem;font-weight:500;white-space:nowrap;}
+.badge-dot{width:8px;height:8px;border-radius:50%;}
+.badge-medizin{background:var(--c-medizin-bg);color:var(--c-medizin);}
+.badge-uni{background:var(--c-uni-bg);color:var(--c-uni);}
+.badge-klausur{background:var(--c-klausur-bg);color:var(--c-klausur);}
+.badge-sonstig{background:var(--c-sonstig-bg);color:var(--c-sonstig);}
+.badge-dot-medizin{background:var(--c-medizin);}
+.badge-dot-uni{background:var(--c-uni);}
+.badge-dot-klausur{background:var(--c-klausur);}
+.badge-dot-sonstig{background:var(--c-sonstig);}
+.absent-tag{display:inline-block;padding:.18rem .55rem;border-radius:6px;font-size:.76rem;font-weight:600;}
+.absent-voll{background:#fde8e8;color:#b91c1c;}
+.absent-teil{background:#fef3c7;color:#92400e;}
+[data-theme="dark"] .absent-voll{background:#3a1515;color:#f87171;}
+[data-theme="dark"] .absent-teil{background:#3a2e0e;color:#fcd34d;}
+.termin-name{font-weight:500;}
+tr.month-sep td{padding:.45rem 1rem;background:var(--surface-2);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);border-bottom:1px solid var(--border);}
+.stats{max-width:860px;margin:1.75rem auto 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;box-shadow:var(--shadow);}
+.stat-card .val{font-family:'DM Serif Display',serif;font-size:1.8rem;line-height:1;margin-bottom:.25rem;}
+.stat-card .lbl{font-size:.75rem;color:var(--muted);}
+.val-medizin{color:var(--c-medizin);}.val-uni{color:var(--c-uni);}.val-klausur{color:var(--c-klausur);}.val-sonstig{color:var(--c-sonstig);}
+@media(max-width:640px){td.time,td.duration,th.col-time,th.col-dur{display:none;}body{padding:1.25rem .75rem 3rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <h1>Abwesenheitsübersicht</h1>
+    <p>彡K &nbsp;·&nbsp; Juni – August 2026 &nbsp;·&nbsp; 17 Termine</p>
+  </div>
+  <button class="theme-toggle" data-theme-toggle>🌙 Dark</button>
+</header>
+<div class="legend">
+  <span class="leg-item"><span class="leg-dot" style="background:var(--c-medizin)"></span>Medizinisch</span>
+  <span class="leg-item"><span class="leg-dot" style="background:var(--c-uni)"></span>Universität</span>
+  <span class="leg-item"><span class="leg-dot" style="background:var(--c-klausur)"></span>Klausur</span>
+  <span class="leg-item"><span class="leg-dot" style="background:var(--c-sonstig)"></span>Sonstiges</span>
+  <span class="leg-item" style="margin-left:.5rem"><span class="absent-tag absent-voll">Vollständig</span></span>
+  <span class="leg-item"><span class="absent-tag absent-teil">Teilweise</span></span>
+</div>
+<div class="filters">
+  <button class="chip active" data-filter="alle">Alle</button>
+  <button class="chip" data-filter="medizin">🩺 Medizinisch</button>
+  <button class="chip" data-filter="uni">🎓 Universität</button>
+  <button class="chip" data-filter="klausur">📝 Klausur</button>
+  <button class="chip" data-filter="sonstig">📌 Sonstiges</button>
+</div>
+<div class="table-wrap">
+<table>
+  <thead><tr>
+    <th>Datum</th><th class="col-time">Uhrzeit</th><th class="col-dur">Dauer</th>
+    <th>Termin</th><th>Kategorie</th><th>Abwesenheit</th>
+  </tr></thead>
+  <tbody id="tbody">
+    <tr class="month-sep"><td colspan="6">Juni 2026</td></tr>
+    <tr data-cat="medizin"><td class="date">03.06.2026</td><td class="time">11:00 Uhr</td><td class="duration">ca. 2 Std.</td><td><span class="termin-name">CT Coburg</span></td><td><span class="badge badge-medizin"><span class="badge-dot badge-dot-medizin"></span>Medizinisch</span></td><td><span class="absent-tag absent-teil">Teilweise</span></td></tr>
+    <tr data-cat="sonstig"><td class="date">09.06.2026</td><td class="time">13:00 Uhr</td><td class="duration">ca. 3 Std.</td><td><span class="termin-name">Professorbesprechung</span></td><td><span class="badge badge-sonstig"><span class="badge-dot badge-dot-sonstig"></span>Sonstiges</span></td><td><span class="absent-tag absent-teil">Teilweise</span></td></tr>
+    <tr data-cat="medizin"><td class="date">10.06.2026</td><td class="time">09:00 Uhr</td><td class="duration">ca. 1–3 Std.</td><td><span class="termin-name">Hausarzttermin</span></td><td><span class="badge badge-medizin"><span class="badge-dot badge-dot-medizin"></span>Medizinisch</span></td><td><span class="absent-tag absent-teil">Teilweise</span></td></tr>
+    <tr data-cat="uni"><td class="date">15.06.2026</td><td class="time">Ganztägig</td><td class="duration">1 Tag</td><td><span class="termin-name">Universität – GIV-Projekt</span></td><td><span class="badge badge-uni"><span class="badge-dot badge-dot-uni"></span>Universität</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
+    <tr data-cat="sonstig"><td class="date">17.06.2026</td><td class="time">09:00–18:00 Uhr</td><td class="duration">Ganztägig</td><td><span class="termin-name">Landratsamt + Universität</span></td><td><span class="badge badge-sonstig"><span class="badge-dot badge-dot-sonstig"></span>Sonstiges</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
+    <tr data-cat="medizin"><td class="date">23.06.2026</td><td class="time">12:00 Uhr</td><td class="duration">ca. 4 Std.</td><td><span class="termin-name">Mammographie Bamberg</span></td><td><span class="badge badge-medizin"><span class="badge-dot badge-dot-medizin"></span>Medizinisch</span></td><td><span class="absent-tag absent-teil">Teilweise</span></td></tr>
+    <tr data-cat="uni"><td class="date">25.–27.06.2026</td><td class="time">Ganztägig</td><td class="duration">3 Tage</td><td><span class="termin-name">Universität – GIV-Projekt</span></td><td><span class="badge badge-uni"><span class="badge-dot badge-dot-uni"></span>Universität</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
+    <tr data-cat="medizin"><td class="date">30.06.2026</td><td class="time">08:30 Uhr</td><td class="duration">ca. 3 Std.</td><td><span class="termin-name">Arzttermin Bamberg</span></td><td><span class="badge badge-medizin"><span class="badge-dot badge-dot-medizin"></span>Medizinisch</span></td><td><span class="absent-tag absent-teil">Teilweise</span></td></tr>
+    <tr class="month-sep"><td colspan="6">Juli 2026</td></tr>
+    <tr data-cat="uni"><td class="date">06.07.2026</td><td class="time">Ganztägig</td><td class="duration">1 Tag</td><td><span class="termin-name">Universität – GIV-Projekt</span></td><td><span class="badge badge-uni"><span class="badge-dot badge-dot-uni"></span>Universität</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
+    <tr data-cat="sonstig"><td class="date">06.–13.07.2026</td><td class="time">Ganztägig</td><td class="duration">8 Tage</td><td><span class="termin-name">Klinikum-Seminar</span></td><td><span class="badge badge-sonstig"><span class="badge-dot badge-dot-sonstig"></span>Sonstiges</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
+    <tr data-cat="klausur"><td class="date">15.07.2026</td><td class="time">Uhrzeit folgt</td><td class="duration">—</td><td><span class="termin-name">Klausur FJAVA</span></td><td><span class="badge badge-klausur"><span class="badge-dot badge-dot-klausur"></span>Klausur</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
+    <tr data-cat="klausur"><td class="date">16.07.2026</td><td class="time">Uhrzeit folgt</td><td class="duration">—</td><td><span class="termin-name">Klausur DistSys</span></td><td><span class="badge badge-klausur"><span class="badge-dot badge-dot-klausur"></span>Klausur</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
+    <tr data-cat="medizin"><td class="date">23.07.2026</td><td class="time">10:50 Uhr</td><td class="duration">ca. 3 Std.</td><td><span class="termin-name">Arzttermin Bad Staffelstein</span></td><td><span class="badge badge-medizin"><span class="badge-dot badge-dot-medizin"></span>Medizinisch</span></td><td><span class="absent-tag absent-teil">Teilweise</span></td></tr>
+    <tr data-cat="uni"><td class="date">29.–31.07.2026</td><td class="time">Ganztägig</td><td class="duration">3 Tage</td><td><span class="termin-name">Universität – GIV-Projekt</span></td><td><span class="badge badge-uni"><span class="badge-dot badge-dot-uni"></span>Universität</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
+    <tr class="month-sep"><td colspan="6">August 2026</td></tr>
+    <tr data-cat="klausur"><td class="date">17.08.2026</td><td class="time">Uhrzeit folgt</td><td class="duration">—</td><td><span class="termin-name">Klausur FSE</span></td><td><span class="badge badge-klausur"><span class="badge-dot badge-dot-klausur"></span>Klausur</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
+    <tr data-cat="klausur"><td class="date">20.08.2026</td><td class="time">Uhrzeit folgt</td><td class="duration">—</td><td><span class="termin-name">Klausur JAVA</span></td><td><span class="badge badge-klausur"><span class="badge-dot badge-dot-klausur"></span>Klausur</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
+    <tr data-cat="sonstig"><td class="date">29.08.2026</td><td class="time">Ganztägig</td><td class="duration">1 Tag</td><td><span class="termin-name">Reservierter Termin</span></td><td><span class="badge badge-sonstig"><span class="badge-dot badge-dot-sonstig"></span>Sonstiges</span></td><td><span class="absent-tag absent-voll">Vollständig</span></td></tr>
+  </tbody>
+</table>
+</div>
+<div class="stats">
+  <div class="stat-card"><div class="val val-medizin">6</div><div class="lbl">🩺 Medizinische Termine</div></div>
+  <div class="stat-card"><div class="val val-uni">4</div><div class="lbl">🎓 Uni-Blöcke</div></div>
+  <div class="stat-card"><div class="val val-klausur">4</div><div class="lbl">📝 Klausuren</div></div>
+  <div class="stat-card"><div class="val val-sonstig">3</div><div class="lbl">📌 Sonstiges</div></div>
+  <div class="stat-card"><div class="val" style="color:var(--text)">17</div><div class="lbl">📅 Gesamt</div></div>
+</div>
+<script>
+(function(){
+  const btn=document.querySelector('[data-theme-toggle]'),html=document.documentElement;
+  let dark=matchMedia('(prefers-color-scheme:dark)').matches;
+  html.setAttribute('data-theme',dark?'dark':'light');
+  btn.textContent=dark?'☀️ Hell':'🌙 Dark';
+  btn.addEventListener('click',()=>{dark=!dark;html.setAttribute('data-theme',dark?'dark':'light');btn.textContent=dark?'☀️ Hell':'🌙 Dark';});
+})();
+document.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    const f=chip.dataset.filter;
+    document.querySelectorAll('#tbody tr[data-cat]').forEach(r=>r.classList.toggle('hidden',f!=='alle'&&r.dataset.cat!==f));
+    document.querySelectorAll('#tbody tr.month-sep').forEach(sep=>{
+      let next=sep.nextElementSibling,vis=false;
+      while(next&&!next.classList.contains('month-sep')){if(!next.classList.contains('hidden')){vis=true;break;}next=next.nextElementSibling;}
+      sep.classList.toggle('hidden',!vis);
+    });
+  });
+});
+</script>
+</body>
+</html>
